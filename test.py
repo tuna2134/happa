@@ -5,6 +5,7 @@ from threading import Thread
 def listen(ws: WebsocketStream):
     ws.send(b"ok")
     msg = ws.recv()
+    print(msg)
     if msg.is_text():
         print(msg.text())
 
@@ -14,4 +15,4 @@ def listener(ws: WebsocketStream):
 
 
 s = Server(listener)
-s.start("0.0.0.0:8080")
+s.start("0.0.0.0:8081")

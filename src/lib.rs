@@ -1,5 +1,8 @@
 use pyo3::prelude::*;
-use std::net::TcpListener;
+use std::{
+    net::TcpListener,
+    // io::Write,
+};
 use tungstenite::accept;
 
 mod message;
@@ -21,9 +24,15 @@ impl Server {
         let listener = TcpListener::bind(addr).unwrap();
         for stream in listener.incoming() {
             let func = self.func.clone_ref(py);
-            let ws = accept(stream.unwrap()).unwrap();
-            let wsstream = stream::WebsocketStream { ws };
-            func.call1(py, (wsstream,)).unwrap();
+            match accept(stream.unwrap()) {
+                Ok(ws) => {
+                    let wsstream = stream::WebsocketStream { ws };
+                    func.call1(py, (wsstream,)).unwrap();
+                },
+                Err(e) => {
+                    println!("Error: {}", e);
+                }
+            }
         }
         Ok(())
     }
