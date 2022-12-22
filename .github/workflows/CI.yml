@@ -2,10 +2,6 @@ name: CI
 
 on:
   push:
-    branches:
-      - main
-      - master
-  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -64,7 +60,9 @@ jobs:
       - name: Publish to PyPI
         uses: PyO3/maturin-action@v1
         env:
-          MATURIN_PYPI_TOKEN: ${{ secrets.PYPI_API_TOKEN }}
+          MATURIN_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          MATURIN_REPOSITORY_URL: ${{ secrets.PYPI_REPOSITORY_URL }}
+          MATURIN_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
         with:
           command: upload
           args: --skip-existing *
